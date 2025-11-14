@@ -1,0 +1,5 @@
+ITB/Library/**/*.dylib filter=lfs diff=lfs merge=lfs -text
+ITB/Library/**/*.dll filter=lfs diff=lfs merge=lfs -text
+ITB/Library/**/*.so filter=lfs diff=lfs merge=lfs -text
+ITB/Library/ArtifactDB filter=lfs diff=lfs merge=lfs -text
+ITB/Library/**/dsymutil filter=lfs diff=lfs merge=lfs -text
