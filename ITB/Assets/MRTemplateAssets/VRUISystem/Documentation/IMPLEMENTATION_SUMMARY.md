@@ -4,6 +4,18 @@
 
 This implementation adds a comprehensive VR UI system for the Lego builder application, following professional VR design best practices to avoid common pitfalls like motion sickness, lens blur, and ergonomic issues.
 
+### 📁 Organized Folder Structure
+
+All VR UI components are organized in: `ITB/Assets/MRTemplateAssets/VRUISystem/`
+
+This dedicated folder structure separates concerns and makes the system easy to maintain:
+- **Scripts/** organized by responsibility (Core, Data, UI, Interaction, Features)
+- **Prefabs/** for Unity prefabs (to be created in editor)
+- **Materials/** for visual materials (ghost preview, highlights, etc.)
+- **Documentation/** centralized setup guides and technical docs
+
+See the [File Structure](#file-structure) section below for details.
+
 ## What Was Implemented
 
 ### Core Architecture (11 Scripts)
@@ -107,24 +119,47 @@ This implementation adds a comprehensive VR UI system for the Lego builder appli
 
 ## File Structure
 
-```
-/home/user/lego/ITB/Assets/MRTemplateAssets/Scripts/
-├── BlockCatalogData.cs (new)
-├── BlockUsageTracker.cs (new)
-├── ForearmSlateUI.cs (new)
-├── TabSystem.cs (new)
-├── GridLayoutManager.cs (new)
-├── BlockButton.cs (new)
-├── RecentsManager.cs (new)
-├── StatsPanel.cs (new)
-├── DeleteMode.cs (new)
-├── UndoSystem.cs (new)
-└── AIGuideButton.cs (new)
+All VR UI system files are organized in a dedicated folder structure:
 
-/home/user/lego/ITB/
-├── VR_UI_SETUP.md (setup guide)
-└── IMPLEMENTATION_SUMMARY.md (this file)
 ```
+/home/user/lego/ITB/Assets/MRTemplateAssets/VRUISystem/
+├── Scripts/
+│   ├── Core/                          # Core system controllers and managers
+│   │   ├── ForearmSlateUI.cs         # Main UI controller
+│   │   ├── BlockUsageTracker.cs      # Statistics tracker singleton
+│   │   └── UndoSystem.cs             # Undo/redo manager singleton
+│   ├── Data/                          # ScriptableObjects and data structures
+│   │   └── BlockCatalogData.cs       # Block catalog ScriptableObject
+│   ├── UI/                            # User interface components
+│   │   ├── TabSystem.cs              # Category tab management
+│   │   ├── GridLayoutManager.cs      # 3x3 grid layout manager
+│   │   ├── BlockButton.cs            # Interactive block button
+│   │   ├── RecentsManager.cs         # Hotbar manager
+│   │   └── StatsPanel.cs             # Statistics display panel
+│   ├── Interaction/                   # Interaction systems
+│   │   └── DeleteMode.cs             # Block deletion system
+│   └── Features/                      # Additional features
+│       └── AIGuideButton.cs          # AI assistance trigger
+├── Prefabs/                           # Unity prefabs (to be created)
+│   └── .gitkeep
+├── Materials/                         # Materials (to be created)
+│   └── .gitkeep
+├── Documentation/                     # Setup guides and documentation
+│   ├── VR_UI_SETUP.md               # Step-by-step setup guide
+│   └── IMPLEMENTATION_SUMMARY.md     # This file
+└── README.md                          # Folder structure overview
+```
+
+### Folder Organization Benefits
+
+- **Core/**: Essential system controllers that manage overall behavior
+- **Data/**: Configuration data separate from logic
+- **UI/**: All UI-related components in one place
+- **Interaction/**: Interaction systems isolated for easy extension
+- **Features/**: Additional features that can be enabled/disabled
+- **Prefabs/**: Unity assets created in editor
+- **Materials/**: Visual materials for ghost preview, highlights, etc.
+- **Documentation/**: All documentation centralized
 
 ## Integration Points
 
@@ -217,7 +252,7 @@ Since Unity prefabs and scene setup can't be fully automated via scripts, you'll
    - Link ray interactors
    - Connect events
 
-**See VR_UI_SETUP.md for detailed step-by-step instructions.**
+**See Documentation/VR_UI_SETUP.md for detailed step-by-step instructions.**
 
 ## Testing Checklist
 

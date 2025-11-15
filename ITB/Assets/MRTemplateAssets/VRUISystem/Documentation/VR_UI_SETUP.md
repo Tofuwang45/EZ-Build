@@ -2,6 +2,24 @@
 
 This guide explains how to set up and use the VR Forearm Slate UI system for your Lego builder application.
 
+## 📁 File Locations
+
+All VR UI system files are organized in:
+```
+ITB/Assets/MRTemplateAssets/VRUISystem/
+├── Scripts/
+│   ├── Core/               # ForearmSlateUI, BlockUsageTracker, UndoSystem
+│   ├── Data/               # BlockCatalogData
+│   ├── UI/                 # TabSystem, GridLayoutManager, BlockButton, etc.
+│   ├── Interaction/        # DeleteMode
+│   └── Features/           # AIGuideButton
+├── Prefabs/                # Unity prefabs (create in editor)
+├── Materials/              # Materials for ghost preview, highlights
+└── Documentation/          # This file and implementation summary
+```
+
+See `../README.md` for detailed folder structure explanation.
+
 ## Overview
 
 The VR UI system implements a professional, ergonomic interface for VR Lego building based on best practices:
