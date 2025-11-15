@@ -6,12 +6,12 @@ using System.Collections.Generic;
 /// Listens to XR Socket Interactor events and logs build steps to the BuildHistoryManager.
 /// Attach this to GameObjects with XRSocketInteractor components.
 /// </summary>
-[RequireComponent(typeof(XRSocketInteractor))]
+[RequireComponent(typeof(UnityEngine.XR.Interaction.Toolkit.Interactors.XRSocketInteractor))]
 public class SocketEventLogger : MonoBehaviour
 {
     [Header("References")]
     [Tooltip("Reference to the socket interactor (auto-assigned if null)")]
-    public XRSocketInteractor socketInteractor;
+    public UnityEngine.XR.Interaction.Toolkit.Interactors.XRSocketInteractor socketInteractor;
 
     [Header("Settings")]
     [Tooltip("Delay before scanning connections (allows physics to settle)")]
@@ -29,7 +29,7 @@ public class SocketEventLogger : MonoBehaviour
         // Auto-assign socket interactor if not set
         if (socketInteractor == null)
         {
-            socketInteractor = GetComponent<XRSocketInteractor>();
+            socketInteractor = GetComponent<UnityEngine.XR.Interaction.Toolkit.Interactors.XRSocketInteractor>();
         }
 
         if (socketInteractor == null)
@@ -66,7 +66,7 @@ public class SocketEventLogger : MonoBehaviour
     private void OnSocketSnap(SelectEnterEventArgs args)
     {
         // Get the interactable that just snapped (the brick)
-        IXRSelectInteractable interactable = args.interactableObject;
+        UnityEngine.XR.Interaction.Toolkit.Interactables.IXRSelectInteractable interactable = args.interactableObject;
         GameObject brickObject = interactable.transform.gameObject;
 
         // Get the BrickIdentifier component
@@ -148,7 +148,7 @@ public class SocketEventLogger : MonoBehaviour
     private void OnSocketRelease(SelectExitEventArgs args)
     {
         // Get the interactable that was released
-        IXRSelectInteractable interactable = args.interactableObject;
+        UnityEngine.XR.Interaction.Toolkit.Interactables.IXRSelectInteractable interactable = args.interactableObject;
         GameObject brickObject = interactable.transform.gameObject;
 
         // Get the BrickIdentifier component
