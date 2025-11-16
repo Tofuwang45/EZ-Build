@@ -88,7 +88,34 @@ namespace MRTemplateAssets.Scripts
                 CreateBlockButton(blocks[i]);
             }
             
+            // Force full layout rebuild after all buttons are added
+            Debug.Log($"[GridLayoutManager] Forcing full layout rebuild");
+            RectTransform gridRect = gridContainer as RectTransform;
+            if (gridRect != null)
+            {
+                LayoutRebuilder.MarkLayoutForRebuild(gridRect);
+                Canvas.ForceUpdateCanvases();
+            }
+            
+            // Schedule a delayed log to show positions after layout is applied
+            StartCoroutine(LogButtonPositionsAfterLayout());
+            
             Debug.Log($"[GridLayoutManager] Grid update complete. Total buttons: {currentButtons.Count}");
+        }
+
+        private System.Collections.IEnumerator LogButtonPositionsAfterLayout()
+        {
+            yield return new WaitForEndOfFrame();
+            
+            Debug.Log($"[GridLayoutManager] After layout rebuild - Button positions:");
+            for (int i = 0; i < currentButtons.Count; i++)
+            {
+                RectTransform rect = currentButtons[i].GetComponent<RectTransform>();
+                if (rect != null)
+                {
+                    Debug.Log($"  Button {i + 1}: Position = {rect.localPosition}, Size = {rect.sizeDelta}");
+                }
+            }
         }
 
         private void CreateBlockButton(BlockData blockData)
@@ -110,6 +137,23 @@ namespace MRTemplateAssets.Scripts
                 blockButton.Initialize(blockData);
                 currentButtons.Add(blockButton);
                 Debug.Log($"[GridLayoutManager] Button added to grid. Total buttons now: {currentButtons.Count}");
+                
+                // Ensure button has a LayoutElement if GridLayoutGroup needs it
+                RectTransform buttonRect = buttonObj.GetComponent<RectTransform>();
+                LayoutElement layoutElement = buttonObj.GetComponent<LayoutElement>();
+                
+                if (buttonRect != null)
+                {
+                    Debug.Log($"[GridLayoutManager] Before layout - Position: {buttonRect.localPosition}, Size: {buttonRect.sizeDelta}");
+                    
+                    if (layoutElement == null)
+                    {
+                        Debug.LogWarning("[GridLayoutManager] Button missing LayoutElement, adding one");
+                        layoutElement = buttonObj.AddComponent<LayoutElement>();
+                        layoutElement.preferredWidth = 100;
+                        layoutElement.preferredHeight = 100;
+                    }
+                }
             }
             else
             {

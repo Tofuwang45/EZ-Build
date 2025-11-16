@@ -2562,6 +2562,10 @@ PrefabInstance:
       propertyPath: recentsManager
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 1889827099823683700, guid: 9100731da6f5d9c4b8047b8e140af703, type: 3}
+      propertyPath: statsPanelPrefab
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 2106971661741163339, guid: 9100731da6f5d9c4b8047b8e140af703, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0

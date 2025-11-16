@@ -20,7 +20,7 @@ MonoBehaviour:
     category: 0
     defaultScale: {x: 1, y: 1, z: 1}
     availableColors:
-    - {r: 1, g: 0, b: 0, a: 0}
+    - {r: 1, g: 0, b: 0, a: 1}
     - {r: 0, g: 1, b: 0, a: 1}
   - blockName: 4x2 Block
     blockId: block_4x2
@@ -29,7 +29,7 @@ MonoBehaviour:
     category: 0
     defaultScale: {x: 1, y: 1, z: 1}
     availableColors:
-    - {r: 1, g: 0, b: 0, a: 0}
+    - {r: 1, g: 0, b: 0, a: 1}
     - {r: 0, g: 1, b: 0, a: 1}
     - {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   defaultColors:

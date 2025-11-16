@@ -83,6 +83,10 @@ namespace MRTemplateAssets.Scripts
             {
                 Debug.LogWarning("[BlockButton] iconImage reference is NULL!");
             }
+            else if (data.icon == null)
+            {
+                Debug.LogWarning($"[BlockButton] No icon assigned for {data.blockName} - this is optional");
+            }
 
             if (nameLabel != null)
             {
@@ -176,11 +180,20 @@ namespace MRTemplateAssets.Scripts
 
         public void OnPointerClick(PointerEventData eventData)
         {
+            Debug.Log($"[BlockButton] OnPointerClick called for: {blockData.blockName}");
+            Debug.Log($"[BlockButton] EventData - World Position: {eventData.worldPosition}, Position: {eventData.position}");
+            
             // Update hit position from the click event
             if (eventData.worldPosition != Vector3.zero)
             {
                 lastHitPosition = eventData.worldPosition;
+                Debug.Log($"[BlockButton] Using world position: {lastHitPosition}");
             }
+            else
+            {
+                Debug.LogWarning($"[BlockButton] World position is zero, using fallback");
+            }
+            
             SpawnBlock();
         }
 
@@ -266,23 +279,41 @@ namespace MRTemplateAssets.Scripts
 
         private void SpawnBlock()
         {
-            if (blockData == null || blockData.prefab == null) return;
+            if (blockData == null || blockData.prefab == null)
+            {
+                Debug.LogError($"[BlockButton] Cannot spawn: blockData or prefab is NULL");
+                return;
+            }
 
+            Debug.Log($"[BlockButton] SpawnBlock called for: {blockData.blockName}");
+            
             // Spawn the actual block
             GameObject spawnedBlock = Instantiate(blockData.prefab);
+            Debug.Log($"[BlockButton] Block instantiated: {spawnedBlock.name}");
 
-            // Position it at the ghost location
+            // Position it at the ghost location or fallback position
+            Vector3 spawnPosition = lastHitPosition;
+            Quaternion spawnRotation = Quaternion.LookRotation(lastHitNormal);
+            
             if (ghostPreview != null)
             {
-                spawnedBlock.transform.position = ghostPreview.transform.position;
-                spawnedBlock.transform.rotation = ghostPreview.transform.rotation;
+                spawnPosition = ghostPreview.transform.position;
+                spawnRotation = ghostPreview.transform.rotation;
+                Debug.Log($"[BlockButton] Using ghost position: {spawnPosition}");
             }
             else
             {
-                // Fallback to last known hit position
-                spawnedBlock.transform.position = lastHitPosition + lastHitNormal * ghostDistance;
-                spawnedBlock.transform.rotation = Quaternion.LookRotation(lastHitNormal);
+                // Fallback: spawn in front of camera
+                Camera mainCam = Camera.main;
+                if (mainCam != null)
+                {
+                    spawnPosition = mainCam.transform.position + mainCam.transform.forward * 2f;
+                    Debug.LogWarning($"[BlockButton] No ghost preview, spawning in front of camera at: {spawnPosition}");
+                }
             }
+            
+            spawnedBlock.transform.position = spawnPosition;
+            spawnedBlock.transform.rotation = spawnRotation;
 
             // Apply selected color
             Renderer[] renderers = spawnedBlock.GetComponentsInChildren<Renderer>();
@@ -313,7 +344,7 @@ namespace MRTemplateAssets.Scripts
                 UndoSystem.Instance.RecordPlacement(spawnedBlock);
             }
 
-            Debug.Log($"Spawned {blockData.blockName} with color {selectedColor}");
+            Debug.Log($"[BlockButton] Successfully spawned {blockData.blockName} at {spawnPosition}");
         }
 
         private void OnDestroy()

@@ -16,6 +16,10 @@ namespace MRTemplateAssets.Scripts
         public RecentsManager recentsManager;
         public GameObject statsPanelPrefab;
 
+        [Header("Debug")]
+        [Tooltip("Enable screen space rendering for testing with mouse clicks")]
+        public bool debugScreenSpaceMode = false;
+
         private Canvas canvas;
         private StatsPanel statsPanel;
         private bool isInitialized = false;
@@ -66,6 +70,14 @@ namespace MRTemplateAssets.Scripts
             {
                 Debug.Log("[ForearmSlateUI] Initializing GridLayoutManager");
                 gridManager.Initialize(blockCatalog);
+                
+                // Auto-populate grid with first category
+                Debug.Log("[ForearmSlateUI] Auto-populating grid with first category");
+                if (tabSystem != null)
+                {
+                    BlockCategory firstCategory = tabSystem.GetCurrentCategory();
+                    gridManager.UpdateGrid(firstCategory);
+                }
             }
             else
             {
@@ -91,7 +103,17 @@ namespace MRTemplateAssets.Scripts
 
         private void SetupCanvas()
         {
-            canvas.renderMode = RenderMode.WorldSpace;
+            if (debugScreenSpaceMode)
+            {
+                Debug.Log("[ForearmSlateUI] DEBUG MODE: Using ScreenSpace for testing");
+                canvas.renderMode = RenderMode.ScreenSpaceCamera;
+                canvas.worldCamera = Camera.main;
+            }
+            else
+            {
+                Debug.Log("[ForearmSlateUI] Using WorldSpace render mode");
+                canvas.renderMode = RenderMode.WorldSpace;
+            }
         }
 
 
