@@ -10,11 +10,11 @@ using System.Collections.Generic;
 public class APICallInstruction : MonoBehaviour
 {
     [Header("API Configuration")]
-    [SerializeField] private string apiEndpoint = "https://api.openai.com/v1/chat/completions";
-    private string apiKey = "";
+    [SerializeField] private string apiEndpoint = "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent";
+    private string apiKey = "AIzaSyBebOeZfngvb5NsJ9MuPHdMvpS88V-euwM";
 
     [Header("AI Prompt Settings")]
-    [SerializeField] private string systemPrompt = "You are a helpful assistant tasked with decoding a set of actions into insturctions. Given a set of actions detailing what parts are connected to what, you will detail how to assemble the parts step by step. For example, given actions (\'pink_block -> light_red_block\') and a corresponding coordinate pair, you will respond with instructions like \'1. Attach a pink block to the right of a light red block.\' Ensure clarity and conciseness in your instructions.";
+    [SerializeField] private string systemPrompt = "You are a helpful assistant tasked with decoding a set of actions into instructions. Given a set of actions detailing what parts are connected to what, you will detail how to assemble the parts step by step. For example, given actions ('pink_block -> light_red_block') and a corresponding coordinate pair, you will respond with instructions like '1. Attach a pink block to the right of a light red block.' Ensure clarity and conciseness in your instructions.";
     
     [Header("Text Input")]
     [SerializeField] private TextMeshProUGUI inputTextObject;
@@ -53,17 +53,18 @@ public class APICallInstruction : MonoBehaviour
                 string[] lines = File.ReadAllLines(path);
                 foreach (string line in lines)
                 {
-                    if (line.StartsWith("OPENAI_API_KEY="))
+                    // Look for GEMINI_API_KEY instead of OPENAI_API_KEY
+                    if (line.StartsWith("GEMINI_API_KEY="))
                     {
-                        apiKey = line.Replace("OPENAI_API_KEY=", "").Trim();
-                        Debug.Log("API Key loaded from .env file");
+                        apiKey = line.Replace("GEMINI_API_KEY=", "").Trim();
+                        Debug.Log("Gemini API Key loaded from .env file");
                         return;
                     }
                 }
             }
         }
 
-        Debug.LogWarning("Could not find .env file or OPENAI_API_KEY not set!");
+        Debug.LogWarning("Could not find .env file or GEMINI_API_KEY not set!");
     }
 
     public void CallAI()
@@ -100,28 +101,35 @@ public class APICallInstruction : MonoBehaviour
     {
         isWaitingForResponse = true;
 
-        // Create the request payload
-        RequestPayload payload = new RequestPayload
+        // Combine system prompt with user message for Gemini
+        string combinedPrompt = systemPrompt + "\n\nUser request: " + userMessage;
+
+        // Create the request payload for Gemini
+        GeminiRequestPayload payload = new GeminiRequestPayload
         {
-            model = "gpt-3.5-turbo",
-            messages = new Message[]
+            contents = new Content[]
             {
-                new Message { role = "system", content = systemPrompt },
-                new Message { role = "user", content = userMessage }
-            },
-            temperature = 0.7f,
-            max_tokens = 500
+                new Content
+                {
+                    parts = new Part[]
+                    {
+                        new Part { text = combinedPrompt }
+                    }
+                }
+            }
         };
 
         string jsonPayload = JsonUtility.ToJson(payload);
 
-        using (UnityWebRequest request = new UnityWebRequest(apiEndpoint, "POST"))
+        // Gemini uses API key as URL parameter
+        string urlWithKey = apiEndpoint + "?key=" + apiKey;
+
+        using (UnityWebRequest request = new UnityWebRequest(urlWithKey, "POST"))
         {
             byte[] bodyRaw = System.Text.Encoding.UTF8.GetBytes(jsonPayload);
             request.uploadHandler = new UploadHandlerRaw(bodyRaw);
             request.downloadHandler = new DownloadHandlerBuffer();
             request.SetRequestHeader("Content-Type", "application/json");
-            request.SetRequestHeader("Authorization", "Bearer " + apiKey);
 
             yield return request.SendWebRequest();
 
@@ -145,11 +153,14 @@ public class APICallInstruction : MonoBehaviour
     {
         try
         {
-            ResponsePayload response = JsonUtility.FromJson<ResponsePayload>(responseText);
+            GeminiResponsePayload response = JsonUtility.FromJson<GeminiResponsePayload>(responseText);
             
-            if (response.choices != null && response.choices.Length > 0)
+            if (response.candidates != null && response.candidates.Length > 0 &&
+                response.candidates[0].content != null &&
+                response.candidates[0].content.parts != null &&
+                response.candidates[0].content.parts.Length > 0)
             {
-                lastResponse = response.choices[0].message.content;
+                lastResponse = response.candidates[0].content.parts[0].text;
                 Debug.Log("AI Response: " + lastResponse);
                 
                 // Display output if output text object is assigned
@@ -168,6 +179,7 @@ public class APICallInstruction : MonoBehaviour
         catch (System.Exception e)
         {
             Debug.LogError("Failed to parse API response: " + e.Message);
+            Debug.LogError("Raw response: " + responseText);
             lastResponse = "Error parsing response";
         }
     }
@@ -218,47 +230,50 @@ public class APICallInstruction : MonoBehaviour
         SaveOutputToFile(lastResponse);
     }
 
-    // JSON Serialization classes for OpenAI API
+    // JSON Serialization classes for Gemini API
     [System.Serializable]
-    private class Message
+    private class Part
     {
-        public string role;
-        public string content;
+        public string text;
     }
 
     [System.Serializable]
-    private class RequestPayload
+    private class Content
     {
-        public string model;
-        public Message[] messages;
-        public float temperature;
-        public int max_tokens;
+        public Part[] parts;
     }
 
     [System.Serializable]
-    private class Choice
+    private class GeminiRequestPayload
     {
-        public Message message;
+        public Content[] contents;
+    }
+
+    [System.Serializable]
+    private class Candidate
+    {
+        public Content content;
+        public string finishReason;
         public int index;
-        public string finish_reason;
     }
 
     [System.Serializable]
-    private class ResponsePayload
+    private class SafetyRating
     {
-        public string id;
-        public string @object;
-        public int created;
-        public string model;
-        public Choice[] choices;
-        public Usage usage;
+        public string category;
+        public string probability;
     }
 
     [System.Serializable]
-    private class Usage
+    private class GeminiResponsePayload
     {
-        public int prompt_tokens;
-        public int completion_tokens;
-        public int total_tokens;
+        public Candidate[] candidates;
+        public PromptFeedback promptFeedback;
+    }
+
+    [System.Serializable]
+    private class PromptFeedback
+    {
+        public SafetyRating[] safetyRatings;
     }
 }
