@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -42,6 +43,9 @@ public class LegoSceneTracker : MonoBehaviour
     private readonly HashSet<int> visitedGroupIds = new HashSet<int>();
     private readonly HashSet<int> neighborIdScratch = new HashSet<int>();
     private readonly List<TrackedBrickState> tempGroupStates = new List<TrackedBrickState>();
+    private readonly List<BrickConnectionInfo> groupConnectionsScratch = new List<BrickConnectionInfo>();
+    private readonly HashSet<int> groupMemberIdScratch = new HashSet<int>();
+    private readonly Dictionary<(int, int), BrickConnectionInfo> connectionMapScratch = new Dictionary<(int, int), BrickConnectionInfo>();
     private float snapshotTimer;
 
     /// <summary>
@@ -421,7 +425,10 @@ public class LegoSceneTracker : MonoBehaviour
 
             var groupInfo = new ConnectedGroupInfo();
             groupInfo.SetBricks(tempGroupStates);
+            BuildGroupConnections(tempGroupStates, groupConnectionsScratch);
+            groupInfo.SetConnections(groupConnectionsScratch);
             connectedGroups.Add(groupInfo);
+            groupConnectionsScratch.Clear();
         }
 
         for (int i = 0; i < connectedGroups.Count; i++)
@@ -430,6 +437,198 @@ public class LegoSceneTracker : MonoBehaviour
         }
 
         SnappedGroupCount = connectedGroups.Count;
+    }
+
+    private void BuildGroupConnections(List<TrackedBrickState> groupStates, List<BrickConnectionInfo> connectionBuffer)
+    {
+        connectionBuffer.Clear();
+        groupMemberIdScratch.Clear();
+        connectionMapScratch.Clear();
+
+        for (int i = 0; i < groupStates.Count; i++)
+        {
+            var state = groupStates[i];
+            if (state == null)
+                continue;
+
+            int id = state.InstanceId;
+            if (id != 0)
+                groupMemberIdScratch.Add(id);
+        }
+
+        for (int i = 0; i < groupStates.Count; i++)
+        {
+            var state = groupStates[i];
+            if (state == null)
+                continue;
+
+            AppendSnapPointConnectionsDetailed(state);
+            AppendJointConnectionsDetailed(state);
+        }
+
+        foreach (var entry in connectionMapScratch.Values)
+        {
+            connectionBuffer.Add(entry);
+        }
+
+        connectionBuffer.Sort((a, b) =>
+        {
+            string aLabel = a != null ? a.GetDisplayLabel() : string.Empty;
+            string bLabel = b != null ? b.GetDisplayLabel() : string.Empty;
+            return string.Compare(aLabel, bLabel, StringComparison.Ordinal);
+        });
+
+        connectionMapScratch.Clear();
+        groupMemberIdScratch.Clear();
+    }
+
+    private void AppendSnapPointConnectionsDetailed(TrackedBrickState state)
+    {
+        if (state == null)
+            return;
+
+        var brick = state.LegoBrick;
+        if (brick == null)
+            return;
+
+        AppendConnectionList(brick.studSnapPoints);
+        AppendConnectionList(brick.socketSnapPoints);
+
+        void AppendConnectionList(List<LegoSnapPoint> points)
+        {
+            if (points == null)
+                return;
+
+            for (int i = 0; i < points.Count; i++)
+            {
+                var point = points[i];
+                if (point == null || !point.isConnected)
+                    continue;
+
+                var otherPoint = point.connectedTo;
+                if (otherPoint == null)
+                    continue;
+
+                var otherBrick = otherPoint.parentBrick;
+                if (otherBrick == null)
+                    continue;
+
+                var otherState = ResolveStateFromComponent(otherBrick);
+                if (otherState == null)
+                    continue;
+
+                string detail = null;
+                if (!string.IsNullOrEmpty(point.name) || (otherPoint != null && !string.IsNullOrEmpty(otherPoint.name)))
+                {
+                    if (!string.IsNullOrEmpty(point.name) && otherPoint != null && !string.IsNullOrEmpty(otherPoint.name))
+                        detail = point.name + " <-> " + otherPoint.name;
+                    else if (!string.IsNullOrEmpty(point.name))
+                        detail = point.name;
+                    else if (otherPoint != null && !string.IsNullOrEmpty(otherPoint.name))
+                        detail = otherPoint.name;
+                }
+
+                RecordConnection(state, otherState, BrickConnectionType.SnapPoint, detail);
+            }
+        }
+    }
+
+    private void AppendJointConnectionsDetailed(TrackedBrickState state)
+    {
+        if (state == null)
+            return;
+
+        var snapBrick = state.SnapPerfect;
+        if (snapBrick == null)
+            return;
+
+        var joints = snapBrick.GetComponents<FixedJoint>();
+        for (int i = 0; i < joints.Length; i++)
+        {
+            var joint = joints[i];
+            if (joint == null)
+                continue;
+
+            var body = joint.connectedBody;
+            if (body == null)
+                continue;
+
+            Component candidate = body.GetComponent<LegoBrick>();
+            if (candidate == null)
+                candidate = body.GetComponent<LegoSnapPerfect>();
+            if (candidate == null)
+                candidate = body.GetComponentInParent<LegoBrick>();
+            if (candidate == null)
+                candidate = body.GetComponentInParent<LegoSnapPerfect>();
+
+            var otherState = ResolveStateFromComponent(candidate);
+            if (otherState == null)
+                continue;
+
+            string detail = !string.IsNullOrEmpty(joint.name) ? joint.name : "FixedJoint";
+            RecordConnection(state, otherState, BrickConnectionType.FixedJoint, detail);
+        }
+    }
+
+    private void RecordConnection(TrackedBrickState stateA, TrackedBrickState stateB, BrickConnectionType type, string detail)
+    {
+        if (stateA == null || stateB == null)
+            return;
+
+        int idA = stateA.InstanceId;
+        int idB = stateB.InstanceId;
+
+        if (idA == 0 || idB == 0 || idA == idB)
+            return;
+
+        if (!groupMemberIdScratch.Contains(idA) || !groupMemberIdScratch.Contains(idB))
+            return;
+
+        var key = CreatePairKey(stateA, stateB, out var first, out var second);
+
+        if (!connectionMapScratch.TryGetValue(key, out var info))
+        {
+            info = new BrickConnectionInfo();
+            info.Initialize(first, second, type, detail);
+            connectionMapScratch[key] = info;
+        }
+        else
+        {
+            info.Merge(first, second, type, detail);
+        }
+    }
+
+    private static (int, int) CreatePairKey(TrackedBrickState a, TrackedBrickState b, out TrackedBrickState first, out TrackedBrickState second)
+    {
+        int idA = a.InstanceId;
+        int idB = b.InstanceId;
+
+        if (idA < idB)
+        {
+            first = a;
+            second = b;
+            return (idA, idB);
+        }
+
+        first = b;
+        second = a;
+        return (idB, idA);
+    }
+
+    private TrackedBrickState ResolveStateFromComponent(Component component)
+    {
+        if (component == null)
+            return null;
+
+        if (trackedBricks.TryGetValue(component.GetInstanceID(), out var byComponent) && byComponent != null)
+            return byComponent;
+
+        var transform = component.transform;
+        if (transform == null)
+            return null;
+
+        trackedByTransform.TryGetValue(transform.GetInstanceID(), out var byTransform);
+        return byTransform;
     }
 
     private void CollectConnectedNeighborIds(TrackedBrickState state)
@@ -642,9 +841,69 @@ public class LegoSceneTracker : MonoBehaviour
     }
 
     [System.Serializable]
+    public enum BrickConnectionType
+    {
+        SnapPoint,
+        FixedJoint,
+        Mixed
+    }
+
+    [System.Serializable]
+    public class BrickConnectionInfo
+    {
+        public TrackedBrickState A { get; private set; }
+        public TrackedBrickState B { get; private set; }
+        public BrickConnectionType Type { get; private set; }
+        public string Detail { get; private set; }
+
+        internal void Initialize(TrackedBrickState a, TrackedBrickState b, BrickConnectionType type, string detail)
+        {
+            A = a;
+            B = b;
+            Type = type;
+            Detail = string.Empty;
+            AddDetail(detail);
+        }
+
+        internal void Merge(TrackedBrickState a, TrackedBrickState b, BrickConnectionType type, string detail)
+        {
+            A = a;
+            B = b;
+
+            if (Type != type)
+                Type = BrickConnectionType.Mixed;
+
+            AddDetail(detail);
+        }
+
+        internal void AddDetail(string detail)
+        {
+            if (string.IsNullOrWhiteSpace(detail))
+                return;
+
+            if (string.IsNullOrEmpty(Detail))
+            {
+                Detail = detail;
+            }
+            else if (!Detail.Contains(detail))
+            {
+                Detail += ", " + detail;
+            }
+        }
+
+        internal string GetDisplayLabel()
+        {
+            string left = A != null ? A.BrickName : "?";
+            string right = B != null ? B.BrickName : "?";
+            return left + "-" + right;
+        }
+    }
+
+    [System.Serializable]
     public class ConnectedGroupInfo
     {
         private readonly List<TrackedBrickState> bricks = new List<TrackedBrickState>();
+        private readonly List<BrickConnectionInfo> connections = new List<BrickConnectionInfo>();
 
         /// <summary>
         /// Bricks participating in this snapped assembly.
@@ -656,10 +915,26 @@ public class LegoSceneTracker : MonoBehaviour
         /// </summary>
         public int Size => bricks.Count;
 
+        /// <summary>
+        /// Connections linking bricks within the group.
+        /// </summary>
+        public IReadOnlyList<BrickConnectionInfo> Connections => connections;
+
+        /// <summary>
+        /// True if at least one connection was detected for this group.
+        /// </summary>
+        public bool HasConnections => connections.Count > 0;
+
         internal void SetBricks(List<TrackedBrickState> source)
         {
             bricks.Clear();
             bricks.AddRange(source);
+        }
+
+        internal void SetConnections(List<BrickConnectionInfo> source)
+        {
+            connections.Clear();
+            connections.AddRange(source);
         }
     }
 }

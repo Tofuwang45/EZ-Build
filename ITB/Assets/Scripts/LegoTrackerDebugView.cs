@@ -47,6 +47,12 @@ public class LegoTrackerDebugView : MonoBehaviour
     [Tooltip("Maximum number of member names to show per group summary.")]
     [SerializeField] private int maxGroupMemberNames = 3;
 
+    [Tooltip("Display direct connection pairs for each assembly.")]
+    [SerializeField] private bool showGroupConnectionPairs = true;
+
+    [Tooltip("Maximum number of connection pairs to show per assembly.")]
+    [SerializeField] private int maxGroupConnectionPairs = 4;
+
     [Tooltip("If enabled, mirror the current panel contents to the Unity console each refresh.")]
     [SerializeField] private bool logToConsole = false;
 
@@ -154,6 +160,16 @@ public class LegoTrackerDebugView : MonoBehaviour
                 debugDisplay.AppendDebugEntry(label, entry);
                 if (logToConsole)
                     consoleBuilder.AppendLine($"{label}: {entry}");
+
+                if (showGroupConnectionPairs && group.HasConnections)
+                {
+                    string connectionLabel = label + " Links";
+                    string connectionsEntry = FormatGroupConnections(group);
+
+                    debugDisplay.AppendDebugEntry(connectionLabel, connectionsEntry);
+                    if (logToConsole)
+                        consoleBuilder.AppendLine($"{connectionLabel}: {connectionsEntry}");
+                }
             }
         }
 
@@ -258,6 +274,52 @@ public class LegoTrackerDebugView : MonoBehaviour
         return groupBuilder.Length > 0 ? groupBuilder.ToString() : "(no data)";
     }
 
+    private string FormatGroupConnections(LegoSceneTracker.ConnectedGroupInfo group)
+    {
+        groupBuilder.Clear();
+
+        var connections = group.Connections;
+        if (connections == null || connections.Count == 0)
+            return "(no connections)";
+
+        int pairsToShow = maxGroupConnectionPairs > 0 ? Mathf.Min(maxGroupConnectionPairs, connections.Count) : connections.Count;
+
+        for (int i = 0; i < pairsToShow; i++)
+        {
+            var connection = connections[i];
+            if (connection == null)
+                continue;
+
+            if (groupBuilder.Length > 0)
+                groupBuilder.Append(" | ");
+
+            string left = connection.A != null ? connection.A.BrickName : "?";
+            string right = connection.B != null ? connection.B.BrickName : "?";
+            string detail = connection.Detail;
+
+            string descriptor = left + " <-> " + right;
+
+            if (!string.IsNullOrEmpty(detail))
+            {
+                descriptor += " (" + detail + ")";
+            }
+            else
+            {
+                descriptor += " (" + DescribeConnectionType(connection.Type) + ")";
+            }
+
+            groupBuilder.Append(descriptor);
+        }
+
+        if (connections.Count > pairsToShow)
+            groupBuilder.Append(" | ...");
+
+        if (groupBuilder.Length == 0)
+            groupBuilder.Append("(no connections)");
+
+        return groupBuilder.ToString();
+    }
+
     private static string FormatVector(Vector3 value)
     {
         return $"({value.x:0.000}, {value.y:0.000}, {value.z:0.000})";
@@ -272,6 +334,21 @@ public class LegoTrackerDebugView : MonoBehaviour
             return addition;
 
         return current + " | " + addition;
+    }
+
+    private static string DescribeConnectionType(LegoSceneTracker.BrickConnectionType type)
+    {
+        switch (type)
+        {
+            case LegoSceneTracker.BrickConnectionType.SnapPoint:
+                return "Snap";
+            case LegoSceneTracker.BrickConnectionType.FixedJoint:
+                return "Joint";
+            case LegoSceneTracker.BrickConnectionType.Mixed:
+                return "Mixed";
+            default:
+                return "Unknown";
+        }
     }
 
     private static double GetLatestTimestamp(LegoSceneTracker.TrackedBrickState state)
