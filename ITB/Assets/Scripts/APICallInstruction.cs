@@ -5,12 +5,13 @@ using System;
 using TMPro;
 using UnityEngine.UI;
 using System.IO;
+using System.Collections.Generic;
 
 public class APICallInstruction : MonoBehaviour
 {
     [Header("API Configuration")]
     [SerializeField] private string apiEndpoint = "https://api.openai.com/v1/chat/completions";
-    [SerializeField] private string apiKey = "";
+    private string apiKey = "";
 
     [Header("AI Prompt Settings")]
     [SerializeField] private string systemPrompt = "You are a helpful assistant tasked with decoding a set of actions into insturctions. Given a set of actions detailing what parts are connected to what, you will detail how to assemble the parts step by step. For example, given actions (\'Lego 2x2 -> Lego 4x2\'), you will respond with instructions like \'1. Attach a Lego 2x2 on top of a Lego 4x2.\' Ensure clarity and conciseness in your instructions.";
@@ -27,6 +28,43 @@ public class APICallInstruction : MonoBehaviour
     [SerializeField] private string lastResponse = "";
     
     private bool isWaitingForResponse = false;
+
+    private void Awake()
+    {
+        LoadApiKeyFromEnv();
+    }
+
+    private void LoadApiKeyFromEnv()
+    {
+        string envFilePath = Path.Combine(Application.persistentDataPath, "..", "..", ".env");
+        
+        // Try multiple possible paths
+        string[] possiblePaths = new string[]
+        {
+            Path.Combine(Application.dataPath, "..", ".env"),
+            Path.Combine(Directory.GetCurrentDirectory(), ".env"),
+            envFilePath
+        };
+
+        foreach (string path in possiblePaths)
+        {
+            if (File.Exists(path))
+            {
+                string[] lines = File.ReadAllLines(path);
+                foreach (string line in lines)
+                {
+                    if (line.StartsWith("OPENAI_API_KEY="))
+                    {
+                        apiKey = line.Replace("OPENAI_API_KEY=", "").Trim();
+                        Debug.Log("API Key loaded from .env file");
+                        return;
+                    }
+                }
+            }
+        }
+
+        Debug.LogWarning("Could not find .env file or OPENAI_API_KEY not set!");
+    }
 
     public void CallAI()
     {
