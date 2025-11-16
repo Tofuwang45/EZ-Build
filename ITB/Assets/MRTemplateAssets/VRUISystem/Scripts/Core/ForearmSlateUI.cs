@@ -1,5 +1,6 @@
 using UnityEngine;
-using UnityEngine.XR.Interaction.Toolkit;
+using Unity.XR.CoreUtils;
+using UnityEngine.XR.Interaction.Toolkit.Interactors;
 
 namespace MRTemplateAssets.Scripts
 {
@@ -124,7 +125,7 @@ namespace MRTemplateAssets.Scripts
         private Transform FindLeftHandController()
         {
             // Try to find the left hand controller in the XR Origin hierarchy
-            var xrOrigin = FindObjectOfType<UnityEngine.XR.Interaction.Toolkit.XROrigin>();
+            var xrOrigin = FindFirstObjectByType<XROrigin>();
             if (xrOrigin != null)
             {
                 // Look for common naming patterns
@@ -135,13 +136,17 @@ namespace MRTemplateAssets.Scripts
                 }
                 if (leftHand == null)
                 {
-                    // Search for any controller with "Left" in the name
-                    var controllers = xrOrigin.GetComponentsInChildren<XRController>();
-                    foreach (var controller in controllers)
+                    leftHand = xrOrigin.transform.Find("Camera Offset/LeftController");
+                }
+                if (leftHand == null)
+                {
+                    // Search for any object with "Left" and "Controller" or "Hand" in the name
+                    var allTransforms = xrOrigin.GetComponentsInChildren<Transform>();
+                    foreach (var t in allTransforms)
                     {
-                        if (controller.name.Contains("Left"))
+                        if (t.name.Contains("Left") && (t.name.Contains("Controller") || t.name.Contains("Hand")))
                         {
-                            leftHand = controller.transform;
+                            leftHand = t;
                             break;
                         }
                     }
@@ -153,7 +158,7 @@ namespace MRTemplateAssets.Scripts
 
         private XRRayInteractor FindRightHandRayInteractor()
         {
-            var rayInteractors = FindObjectsOfType<XRRayInteractor>();
+            var rayInteractors = FindObjectsByType<XRRayInteractor>(FindObjectsSortMode.None);
             foreach (var interactor in rayInteractors)
             {
                 if (interactor.name.Contains("Right"))

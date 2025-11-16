@@ -1,5 +1,5 @@
 using UnityEngine;
-using UnityEngine.XR.Interaction.Toolkit;
+using UnityEngine.XR.Interaction.Toolkit.Interactors;
 using UnityEngine.UI;
 
 namespace MRTemplateAssets.Scripts
@@ -158,19 +158,12 @@ namespace MRTemplateAssets.Scripts
 
         private bool IsDeleteInputPressed()
         {
-            // Check for trigger press on the right controller
+            // Check for trigger press using XR Interaction Toolkit's input system
             if (rayInteractor != null)
             {
-                var controller = rayInteractor.GetComponent<XRController>();
-                if (controller != null)
-                {
-                    // Check trigger press
-                    controller.inputDevice.TryGetFeatureValue(
-                        UnityEngine.XR.CommonUsages.triggerButton,
-                        out bool triggerPressed
-                    );
-                    return triggerPressed;
-                }
+                // Check if the select input (trigger) is pressed
+                float selectValue = rayInteractor.selectInput.ReadValue();
+                return selectValue > 0.5f;
             }
             return false;
         }
