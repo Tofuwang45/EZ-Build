@@ -186,21 +186,11 @@ namespace MRTemplateAssets.Scripts
             // Try with NearFarInteractor first
             if (nearFarInteractor != null)
             {
-                RaycastHit hit;
-                if (nearFarInteractor.TryGetCurrent3DRaycastHit(out hit))
-                {
-                    ghostPreview.transform.position = hit.point + hit.normal * ghostDistance;
-                    ghostPreview.transform.rotation = Quaternion.LookRotation(hit.normal);
-                    return;
-                }
-                else
-                {
-                    // Position along forward direction at fixed distance
-                    ghostPreview.transform.position = nearFarInteractor.transform.position +
-                                                      nearFarInteractor.transform.forward * 1.0f;
-                    ghostPreview.transform.rotation = nearFarInteractor.transform.rotation;
-                    return;
-                }
+                // Position along forward direction at fixed distance
+                ghostPreview.transform.position = nearFarInteractor.transform.position +
+                                                  nearFarInteractor.transform.forward * 1.0f;
+                ghostPreview.transform.rotation = nearFarInteractor.transform.rotation;
+                return;
             }
 
             // Fallback to XRRayInteractor
@@ -253,11 +243,9 @@ namespace MRTemplateAssets.Scripts
             }
             else if (nearFarInteractor != null)
             {
-                RaycastHit hit;
-                if (nearFarInteractor.TryGetCurrent3DRaycastHit(out hit))
-                {
-                    spawnedBlock.transform.position = hit.point;
-                }
+                spawnedBlock.transform.position = nearFarInteractor.transform.position +
+                                                  nearFarInteractor.transform.forward * 1.0f;
+                spawnedBlock.transform.rotation = nearFarInteractor.transform.rotation;
             }
             else if (rayInteractor != null)
             {
