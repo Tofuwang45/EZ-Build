@@ -2400,6 +2400,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a2d7d89889b4d94fa1f8d6fe49788e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!224 &1457611370 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 7966227910699010364, guid: 9100731da6f5d9c4b8047b8e140af703, type: 3}
+  m_PrefabInstance: {fileID: 1613633599}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1587903128
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2569,6 +2574,14 @@ PrefabInstance:
       propertyPath: blockCatalog
       value: 
       objectReference: {fileID: 11400000, guid: 3baa79555bedad949a5902b104f66ab8, type: 2}
+    - target: {fileID: 1889827099823683700, guid: 9100731da6f5d9c4b8047b8e140af703, type: 3}
+      propertyPath: gridContainer
+      value: 
+      objectReference: {fileID: 1457611370}
+    - target: {fileID: 1889827099823683700, guid: 9100731da6f5d9c4b8047b8e140af703, type: 3}
+      propertyPath: blockButtonPrefab
+      value: 
+      objectReference: {fileID: 7771149797590592344, guid: 12b39646a3365db4d9d5cb4e25a23fde, type: 3}
     - target: {fileID: 2106971661741163339, guid: 9100731da6f5d9c4b8047b8e140af703, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -2592,6 +2605,10 @@ PrefabInstance:
     - target: {fileID: 2165461689307992017, guid: 9100731da6f5d9c4b8047b8e140af703, type: 3}
       propertyPath: m_Name
       value: ForearmCanvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 4228637132334432243, guid: 9100731da6f5d9c4b8047b8e140af703, type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4228637132334432243, guid: 9100731da6f5d9c4b8047b8e140af703, type: 3}
       propertyPath: raycastOrigin

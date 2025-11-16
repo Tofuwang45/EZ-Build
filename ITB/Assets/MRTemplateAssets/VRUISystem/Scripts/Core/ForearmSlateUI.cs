@@ -1,23 +1,30 @@
 using UnityEngine;
-using Unity.XR.CoreUtils;
+using UnityEngine.UI;
 
 namespace MRTemplateAssets.Scripts
 {
     /// <summary>
-    /// Main controller for the Forearm Slate UI
+    /// Main controller for the Forearm Slate UI - simple static 3x3 grid
     /// </summary>
     [RequireComponent(typeof(Canvas))]
     public class ForearmSlateUI : MonoBehaviour
     {
-        [Header("References")]
+        [Header("Grid Configuration")]
+        [Tooltip("The parent transform containing the grid")]
+        public Transform gridContainer;
+
+        [Tooltip("Prefab for block buttons")]
+        public GameObject blockButtonPrefab;
+
+        [Header("Block Catalog")]
+        [Tooltip("Catalog containing the first 9 blocks to display")]
         public BlockCatalogData blockCatalog;
-        public TabSystem tabSystem;
-        public GridLayoutManager gridManager;
-        public RecentsManager recentsManager;
-        public GameObject statsPanelPrefab;
+
+        [Header("Grid Settings")]
+        [Tooltip("Number of columns in the grid")]
+        public int columns = 3;
 
         private Canvas canvas;
-        private StatsPanel statsPanel;
         private bool isInitialized = false;
 
         private void Awake()
@@ -35,27 +42,14 @@ namespace MRTemplateAssets.Scripts
         {
             if (isInitialized) return;
 
-            // Initialize subsystems
-            if (tabSystem != null)
+            // Setup grid with first 9 blocks from catalog
+            if (blockCatalog != null && gridContainer != null && blockButtonPrefab != null)
             {
-                tabSystem.Initialize(blockCatalog);
-                tabSystem.OnTabChanged += OnTabChanged;
+                SetupStaticGrid();
             }
-
-            if (gridManager != null)
+            else
             {
-                gridManager.Initialize(blockCatalog);
-            }
-
-            if (recentsManager != null)
-            {
-                recentsManager.Initialize(blockCatalog);
-            }
-
-            // Create stats panel if prefab is assigned
-            if (statsPanelPrefab != null)
-            {
-                CreateStatsPanel();
+                Debug.LogError("ForearmSlateUI: Missing references (blockCatalog, gridContainer, or blockButtonPrefab)");
             }
 
             isInitialized = true;
@@ -66,34 +60,40 @@ namespace MRTemplateAssets.Scripts
             canvas.renderMode = RenderMode.WorldSpace;
         }
 
-
-
-        private void OnTabChanged(BlockCategory category)
+        private void SetupStaticGrid()
         {
-            if (gridManager != null)
+            // Setup grid layout
+            var gridLayout = gridContainer.GetComponent<GridLayoutGroup>();
+            if (gridLayout != null)
             {
-                gridManager.UpdateGrid(category);
+                gridLayout.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
+                gridLayout.constraintCount = columns;
+            }
+
+            // Create buttons for the first 9 blocks
+            int blockCount = Mathf.Min(blockCatalog.allBlocks.Count, 9);
+            for (int i = 0; i < blockCount; i++)
+            {
+                CreateBlockButton(blockCatalog.allBlocks[i]);
             }
         }
 
-        private void CreateStatsPanel()
+        private void CreateBlockButton(BlockData blockData)
         {
-            GameObject panelObj = Instantiate(statsPanelPrefab);
-            statsPanel = panelObj.GetComponent<StatsPanel>();
+            if (blockData == null) return;
 
-            if (statsPanel != null)
+            GameObject buttonObj = Instantiate(blockButtonPrefab, gridContainer);
+            BlockButton blockButton = buttonObj.GetComponent<BlockButton>();
+
+            if (blockButton != null)
             {
-                // Position the stats panel in world space (lazy follow or wrist position)
-                statsPanel.Initialize();
+                blockButton.Initialize(blockData);
             }
         }
 
         private void OnDestroy()
         {
-            if (tabSystem != null)
-            {
-                tabSystem.OnTabChanged -= OnTabChanged;
-            }
+            // Cleanup if needed
         }
 
         /// <summary>

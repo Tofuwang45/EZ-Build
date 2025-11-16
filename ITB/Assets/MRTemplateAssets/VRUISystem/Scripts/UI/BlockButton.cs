@@ -41,15 +41,16 @@ namespace MRTemplateAssets.Scripts
         {
             blockData = data;
 
-            // Set up UI
-            if (iconImage != null && data.icon != null)
-            {
-                iconImage.sprite = data.icon;
-            }
-
+            // Set up UI - icon is optional, name is required
             if (nameLabel != null)
             {
                 nameLabel.text = data.blockName;
+            }
+
+            // Only set icon if both iconImage and icon exist
+            if (iconImage != null && data.icon != null)
+            {
+                iconImage.sprite = data.icon;
             }
 
             // Create color selection dots

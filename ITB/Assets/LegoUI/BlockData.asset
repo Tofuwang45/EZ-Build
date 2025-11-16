@@ -16,7 +16,25 @@ MonoBehaviour:
   - blockName: 2x2 Block
     blockId: block_2x2
     prefab: {fileID: 346654792417907792, guid: a50fe9e0591af284984d082f9cd8f2b7, type: 3}
-    icon: {fileID: 0}
+    icon: {fileID: 7681201850867341242, guid: 215687feeab0b7445b4a1cd86c82c2e1, type: 3}
+    category: 0
+    defaultScale: {x: 1, y: 1, z: 1}
+    availableColors:
+    - {r: 1, g: 0, b: 0, a: 0}
+    - {r: 0, g: 1, b: 0, a: 1}
+  - blockName: 4x2 block
+    blockId: block_4x2
+    prefab: {fileID: 6262048180142788448, guid: 8e5baf0efae3d4c41b8638e16e42e14b, type: 3}
+    icon: {fileID: -3662145209645026858, guid: 215687feeab0b7445b4a1cd86c82c2e1, type: 3}
+    category: 0
+    defaultScale: {x: 1, y: 1, z: 1}
+    availableColors:
+    - {r: 1, g: 0, b: 0, a: 0}
+    - {r: 0, g: 1, b: 0, a: 1}
+  - blockName: 2x1 block
+    blockId: block_2x1
+    prefab: {fileID: 9051451836895713753, guid: 5824982ea1eb46a4c940a54c8788f3ee, type: 3}
+    icon: {fileID: -3662145209645026858, guid: 215687feeab0b7445b4a1cd86c82c2e1, type: 3}
     category: 0
     defaultScale: {x: 1, y: 1, z: 1}
     availableColors:
