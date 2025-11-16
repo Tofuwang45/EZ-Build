@@ -10,7 +10,7 @@ using System.Collections.Generic;
 public class APICallInstruction : MonoBehaviour
 {
     [Header("API Configuration")]
-    [SerializeField] private string apiEndpoint = "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent";
+    [SerializeField] private string apiEndpoint = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent";
     private string apiKey = "";
 
     [Header("AI Prompt Settings")]
@@ -59,7 +59,7 @@ public class APICallInstruction : MonoBehaviour
                     if (line.StartsWith("GEMINI_API_KEY="))
                     {
                         apiKey = line.Replace("GEMINI_API_KEY=", "").Trim();
-                        Debug.Log("[ENV] Gemini API Key loaded successfully. Key starts with: " + apiKey.Substring(0, Math.Min(5, apiKey.Length)) + "...");
+                        Debug.Log("[ENV] GEMINI_API_KEY loaded from: " + path);
                         return;
                     }
                 }
