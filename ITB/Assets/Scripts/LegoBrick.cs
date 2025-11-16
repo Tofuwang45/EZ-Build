@@ -175,7 +175,7 @@ public class LegoBrick : MonoBehaviour
             SphereCollider sockCol = sockObj.GetComponent<SphereCollider>();
             if (sockCol == null)
                 sockCol = sockObj.AddComponent<SphereCollider>();
-            sockCol.radius = LegoSnapPoint.SNAP_RADIUS;
+            sockCol.radius = LegoSnapPoint.SNAP_RADIUS * 1.5f; // Sockets have larger detection radius for easier snapping
             sockCol.isTrigger = true;
 
             socketSnapPoints.Add(sockPoint);

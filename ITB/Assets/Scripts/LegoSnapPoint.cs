@@ -50,9 +50,9 @@ public class LegoSnapPoint : MonoBehaviour
 
     // Snap detection radius: 0.35m (half-stud distance, also equals edge margin for natural snapping)
     /// <summary>
-    /// Radius within which snapping should occur. Default suggested value: 0.35.
+    /// Radius within which snapping should occur. Default suggested value: 0.5.
     /// </summary>
-    public const float SNAP_RADIUS = 0.35f;
+    public const float SNAP_RADIUS = 0.5f;
 
     /// <summary>
     /// Draw debug gizmos in the Scene view to visualize snap points and connections.
