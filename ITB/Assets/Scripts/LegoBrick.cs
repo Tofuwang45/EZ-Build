@@ -58,6 +58,7 @@ public class LegoBrick : MonoBehaviour
     private bool isBeingHeld = false;
     private Rigidbody rb;
     private List<LegoSnapPoint> potentialConnections = new List<LegoSnapPoint>();
+    private BrickIdentifier brickIdentifier;
 
     /// <summary>
     /// Ensure a Rigidbody is present on Awake (added if missing).
@@ -68,6 +69,15 @@ public class LegoBrick : MonoBehaviour
         if (rb == null)
         {
             rb = gameObject.AddComponent<Rigidbody>();
+        }
+
+        // Get or add BrickIdentifier for build history tracking
+        brickIdentifier = GetComponent<BrickIdentifier>();
+        if (brickIdentifier == null)
+        {
+            brickIdentifier = gameObject.AddComponent<BrickIdentifier>();
+            brickIdentifier.studsWidth = width;
+            brickIdentifier.studsLength = length;
         }
 
         // Default Rigidbody settings are left minimal; adjust externally as needed.
@@ -554,6 +564,9 @@ public class LegoBrick : MonoBehaviour
             AudioSource.PlayClipAtPoint(snapSound, transform.position);
         }
 
+        // Log this build step to history
+        LogBuildStep();
+
         // Haptic feedback: if this brick is currently held by an XR controller, send a short impulse
         try
         {
@@ -591,6 +604,69 @@ public class LegoBrick : MonoBehaviour
         {
             // Ignore if XR Interaction Toolkit types are not available or something goes wrong
         }
+    }
+
+    /// <summary>
+    /// Get list of unique brick IDs this brick is connected to via sockets
+    /// </summary>
+    public List<string> GetConnectedBrickIDs()
+    {
+        List<string> connectedIDs = new List<string>();
+
+        foreach (var socket in socketSnapPoints)
+        {
+            if (socket == null || !socket.isConnected || socket.connectedTo == null)
+                continue;
+
+            var connectedBrick = socket.connectedTo.parentBrick;
+            if (connectedBrick == null || connectedBrick == this)
+                continue;
+
+            var connectedIdentifier = connectedBrick.GetComponent<BrickIdentifier>();
+            if (connectedIdentifier != null && !connectedIDs.Contains(connectedIdentifier.uniqueID))
+            {
+                connectedIDs.Add(connectedIdentifier.uniqueID);
+            }
+        }
+
+        return connectedIDs;
+    }
+
+    /// <summary>
+    /// Log this brick's placement as a build step in the history manager
+    /// </summary>
+    private void LogBuildStep()
+    {
+        if (BuildHistoryManager.Instance == null)
+        {
+            Debug.LogWarning("[LegoBrick] BuildHistoryManager not found - cannot log build step");
+            return;
+        }
+
+        if (brickIdentifier == null)
+        {
+            Debug.LogWarning("[LegoBrick] BrickIdentifier missing - cannot log build step");
+            return;
+        }
+
+        // Get list of parent brick IDs this brick is now connected to
+        List<string> parentIDs = GetConnectedBrickIDs();
+
+        // Create and log the build step
+        BuildStep step = new BuildStep(
+            brickIdentifier.uniqueID,
+            brickIdentifier.brickName,
+            brickIdentifier.studsWidth,
+            brickIdentifier.studsLength,
+            parentIDs,
+            transform.localPosition,
+            transform.localRotation,
+            transform.position
+        );
+
+        BuildHistoryManager.Instance.AddBuildStep(step);
+
+        Debug.Log($"<color=green>✓ [LegoBrick] Logged: {brickIdentifier.brickName} → {parentIDs.Count} connection(s)</color>");
     }
 
 #if UNITY_EDITOR
