@@ -7,7 +7,7 @@ public class LegoSnapSystem : MonoBehaviour
     public Transform[] sockets;    // Bottom connection points
     
     [Header("Snap Settings")]
-    public float snapDistance = 0.05f;
+    public float snapDistance = 0.15f;
     public float snapForce = 10f;
     public LayerMask legoLayer;
     
@@ -38,7 +38,7 @@ public class LegoSnapSystem : MonoBehaviour
     void Update()
     {
         // Only try to snap when moving slowly
-        if (rb != null && rb.velocity.magnitude < 0.5f && !isSnapped)
+        if (rb != null && rb.linearVelocity.magnitude < 0.5f && !isSnapped)
         {
             TrySnap();
         }
@@ -140,4 +140,7 @@ public class LegoSnapSystem : MonoBehaviour
         }
         isSnapped = false;
     }
+    
+    
+    
 }
