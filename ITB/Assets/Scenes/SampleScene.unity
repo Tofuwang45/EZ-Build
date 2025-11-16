@@ -2678,6 +2678,10 @@ PrefabInstance:
       propertyPath: m_fontSizeBase
       value: 8
       objectReference: {fileID: 0}
+    - target: {fileID: 7118098351101419264, guid: 9100731da6f5d9c4b8047b8e140af703, type: 3}
+      propertyPath: tabs.Array.size
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7737967442021049123, guid: 9100731da6f5d9c4b8047b8e140af703, type: 3}
       propertyPath: m_SizeDelta.x
       value: 35

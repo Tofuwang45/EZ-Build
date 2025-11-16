@@ -35,29 +35,57 @@ namespace MRTemplateAssets.Scripts
         {
             if (isInitialized) return;
 
+            Debug.Log("[ForearmSlateUI] Initializing ForearmSlateUI");
+            Debug.Log($"  - blockCatalog: {(blockCatalog != null ? "Assigned" : "NULL")}");
+            Debug.Log($"  - tabSystem: {(tabSystem != null ? "Assigned" : "NULL")}");
+            Debug.Log($"  - gridManager: {(gridManager != null ? "Assigned" : "NULL")}");
+            Debug.Log($"  - recentsManager: {(recentsManager != null ? "Assigned" : "NULL")}");
+            
+            if (blockCatalog == null)
+            {
+                Debug.LogError("[ForearmSlateUI] blockCatalog is NOT assigned! Grid will not populate.");
+            }
+            else
+            {
+                Debug.Log($"[ForearmSlateUI] blockCatalog has {blockCatalog.allBlocks.Count} total blocks");
+            }
+
             // Initialize subsystems
             if (tabSystem != null)
             {
+                Debug.Log("[ForearmSlateUI] Initializing TabSystem");
                 tabSystem.Initialize(blockCatalog);
                 tabSystem.OnTabChanged += OnTabChanged;
+            }
+            else
+            {
+                Debug.LogError("[ForearmSlateUI] TabSystem not assigned!");
             }
 
             if (gridManager != null)
             {
+                Debug.Log("[ForearmSlateUI] Initializing GridLayoutManager");
                 gridManager.Initialize(blockCatalog);
+            }
+            else
+            {
+                Debug.LogError("[ForearmSlateUI] GridLayoutManager not assigned!");
             }
 
             if (recentsManager != null)
             {
+                Debug.Log("[ForearmSlateUI] Initializing RecentsManager");
                 recentsManager.Initialize(blockCatalog);
             }
 
             // Create stats panel if prefab is assigned
             if (statsPanelPrefab != null)
             {
+                Debug.Log("[ForearmSlateUI] Creating stats panel");
                 CreateStatsPanel();
             }
 
+            Debug.Log("[ForearmSlateUI] Initialization complete");
             isInitialized = true;
         }
 
@@ -70,9 +98,15 @@ namespace MRTemplateAssets.Scripts
 
         private void OnTabChanged(BlockCategory category)
         {
+            Debug.Log($"[ForearmSlateUI] OnTabChanged event: {category}");
             if (gridManager != null)
             {
+                Debug.Log($"[ForearmSlateUI] Calling gridManager.UpdateGrid({category})");
                 gridManager.UpdateGrid(category);
+            }
+            else
+            {
+                Debug.LogError($"[ForearmSlateUI] gridManager is NULL! Cannot update grid.");
             }
         }
 

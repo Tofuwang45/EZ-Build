@@ -35,10 +35,27 @@ namespace MRTemplateAssets.Scripts
         public void Initialize(BlockCatalogData catalog)
         {
             catalogData = catalog;
+            
+            Debug.Log("[TabSystem] Initializing TabSystem");
+            Debug.Log($"  - Catalog: {(catalogData != null ? "Assigned" : "NULL")}");
+            Debug.Log($"  - Number of tabs: {tabs.Count}");
+            
+            if (tabs.Count == 0)
+            {
+                Debug.LogWarning("[TabSystem] No tabs configured!");
+                return;
+            }
 
             // Setup button listeners
             foreach (var tab in tabs)
             {
+                Debug.Log($"[TabSystem] Setting up tab: {tab.category}");
+                if (tab.button == null)
+                {
+                    Debug.LogError($"[TabSystem] Tab button is NULL for category {tab.category}!");
+                    continue;
+                }
+                
                 BlockCategory category = tab.category; // Capture for lambda
                 tab.button.onClick.AddListener(() => SelectTab(category));
             }
@@ -46,6 +63,7 @@ namespace MRTemplateAssets.Scripts
             // Select the first tab by default
             if (tabs.Count > 0)
             {
+                Debug.Log($"[TabSystem] Selecting first tab by default: {tabs[0].category}");
                 SelectTab(tabs[0].category);
             }
         }
@@ -55,6 +73,7 @@ namespace MRTemplateAssets.Scripts
         /// </summary>
         public void SelectTab(BlockCategory category)
         {
+            Debug.Log($"[TabSystem] SelectTab called: {category}");
             currentCategory = category;
 
             // Update visual state of all tabs
@@ -65,6 +84,7 @@ namespace MRTemplateAssets.Scripts
             }
 
             // Notify listeners
+            Debug.Log($"[TabSystem] Invoking OnTabChanged event with category: {category}");
             OnTabChanged?.Invoke(category);
         }
 

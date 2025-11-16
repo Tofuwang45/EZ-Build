@@ -57,7 +57,13 @@ namespace MRTemplateAssets.Scripts
         /// </summary>
         public List<BlockData> GetBlocksByCategory(BlockCategory category)
         {
-            return allBlocks.FindAll(block => block.category == category);
+            var blocks = allBlocks.FindAll(block => block.category == category);
+            Debug.Log($"[BlockCatalog] GetBlocksByCategory({category}): Found {blocks.Count} blocks");
+            foreach (var block in blocks)
+            {
+                Debug.Log($"  - {block.blockName} (ID: {block.blockId})");
+            }
+            return blocks;
         }
 
         /// <summary>

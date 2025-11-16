@@ -25,7 +25,7 @@ MonoBehaviour:
   - blockName: 4x2 Block
     blockId: block_4x2
     prefab: {fileID: 6262048180142788448, guid: 8e5baf0efae3d4c41b8638e16e42e14b, type: 3}
-    icon: {fileID: 7681201850867341242, guid: 215687feeab0b7445b4a1cd86c82c2e1, type: 3}
+    icon: {fileID: 2289998852469363648, guid: 215687feeab0b7445b4a1cd86c82c2e1, type: 3}
     category: 0
     defaultScale: {x: 1, y: 1, z: 1}
     availableColors:
