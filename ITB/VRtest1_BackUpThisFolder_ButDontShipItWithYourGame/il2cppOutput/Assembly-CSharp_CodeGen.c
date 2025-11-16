@@ -47,9 +47,16 @@ extern void LegoXRGrabbable_OnDisable_m08FF546070FB8479933102CF7D50A92B1DC5DF32 
 extern void LegoXRGrabbable_OnSelectEntered_m46AB3D5CEDB7598AD534B8B20C7655A720040386 (void);
 extern void LegoXRGrabbable_OnSelectExited_m7838BAF1C6A07D050C0FF91C7E2C398FD4E10AF7 (void);
 extern void LegoXRGrabbable__ctor_m0B709F199A76E283A2EACDC3AA4ABDEB47FBD463 (void);
+extern void LegoSnapSystem_Start_m06208A92EC73F1885FAB6459AB80CFF7AA37C1B2 (void);
+extern void LegoSnapSystem_Update_m4C48A4EB60AAE029A11DFD300684882BC8BC246B (void);
+extern void LegoSnapSystem_TrySnap_mC0EE3300D5668FF91E11797922207336A3522529 (void);
+extern void LegoSnapSystem_SnapTo_m28DE84D38A45D2BD0C6575D730CD6B9726752DDC (void);
+extern void LegoSnapSystem_FindChildrenByName_mA430388E5D9276056A452E5EFF68699C4157983F (void);
+extern void LegoSnapSystem_Unsnap_mA484574D87ECAF69C7B1705E2C60E2BB42C2059F (void);
+extern void LegoSnapSystem__ctor_m144A914DEEF0EAF62780F28C617EA5F3B3BEA47D (void);
 extern void UnitySourceGeneratedAssemblyMonoScriptTypes_v1_Get_mBEB95BEB954BB63E9710BBC7AD5E78C4CB0A0033 (void);
 extern void UnitySourceGeneratedAssemblyMonoScriptTypes_v1__ctor_mE70FB23ACC1EA12ABC948AA22C2E78B2D0AA39B1 (void);
-static Il2CppMethodPointer s_methodPointers[42] = 
+static Il2CppMethodPointer s_methodPointers[49] = 
 {
 	Duplicate_OnMouseDown_mA28DE94A6DAC52EE9D34AAC3F228AE56D85C7EBF,
 	Duplicate_Start_m16806AEE5980C1524634C0D732DE701F4D99DDAA,
@@ -91,10 +98,17 @@ static Il2CppMethodPointer s_methodPointers[42] =
 	LegoXRGrabbable_OnSelectEntered_m46AB3D5CEDB7598AD534B8B20C7655A720040386,
 	LegoXRGrabbable_OnSelectExited_m7838BAF1C6A07D050C0FF91C7E2C398FD4E10AF7,
 	LegoXRGrabbable__ctor_m0B709F199A76E283A2EACDC3AA4ABDEB47FBD463,
+	LegoSnapSystem_Start_m06208A92EC73F1885FAB6459AB80CFF7AA37C1B2,
+	LegoSnapSystem_Update_m4C48A4EB60AAE029A11DFD300684882BC8BC246B,
+	LegoSnapSystem_TrySnap_mC0EE3300D5668FF91E11797922207336A3522529,
+	LegoSnapSystem_SnapTo_m28DE84D38A45D2BD0C6575D730CD6B9726752DDC,
+	LegoSnapSystem_FindChildrenByName_mA430388E5D9276056A452E5EFF68699C4157983F,
+	LegoSnapSystem_Unsnap_mA484574D87ECAF69C7B1705E2C60E2BB42C2059F,
+	LegoSnapSystem__ctor_m144A914DEEF0EAF62780F28C617EA5F3B3BEA47D,
 	UnitySourceGeneratedAssemblyMonoScriptTypes_v1_Get_mBEB95BEB954BB63E9710BBC7AD5E78C4CB0A0033,
 	UnitySourceGeneratedAssemblyMonoScriptTypes_v1__ctor_mE70FB23ACC1EA12ABC948AA22C2E78B2D0AA39B1,
 };
-static const int32_t s_InvokerIndices[42] = 
+static const int32_t s_InvokerIndices[49] = 
 {
 	17710,
 	17710,
@@ -136,6 +150,13 @@ static const int32_t s_InvokerIndices[42] =
 	13468,
 	13468,
 	17710,
+	17710,
+	17710,
+	17710,
+	6900,
+	11619,
+	17710,
+	17710,
 	30022,
 	17710,
 };
@@ -143,7 +164,7 @@ IL2CPP_EXTERN_C const Il2CppCodeGenModule g_AssemblyU2DCSharp_CodeGenModule;
 const Il2CppCodeGenModule g_AssemblyU2DCSharp_CodeGenModule = 
 {
 	"Assembly-CSharp.dll",
-	42,
+	49,
 	s_methodPointers,
 	0,
 	NULL,

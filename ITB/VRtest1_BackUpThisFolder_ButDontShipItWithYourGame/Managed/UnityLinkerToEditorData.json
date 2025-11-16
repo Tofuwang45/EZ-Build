@@ -981,6 +981,18 @@
             "icon": null
           },
           {
+            "name": "FixedJoint",
+            "scenes": [],
+            "dependencyType": 0,
+            "icon": null
+          },
+          {
+            "name": "Joint",
+            "scenes": [],
+            "dependencyType": 1,
+            "icon": null
+          },
+          {
             "name": "MeshCollider",
             "scenes": [
               "Assets/Scenes/SampleScene.unity"

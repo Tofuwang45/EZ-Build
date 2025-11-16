@@ -375,6 +375,68 @@ MonoBehaviour:
   m_Image: {fileID: 357356508}
   m_CanvasGroup: {fileID: 0}
   m_IgnoreAlpha: 0
+--- !u!1 &211547739
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 211547740}
+  m_Layer: 0
+  m_Name: soc1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &211547740
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 211547739}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1306165438}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &255757272
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 255757273}
+  m_Layer: 0
+  m_Name: soc0
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &255757273
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 255757272}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1306165438}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &257810521
 GameObject:
   m_ObjectHideFlags: 0
@@ -679,6 +741,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &373371042
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 373371043}
+  m_Layer: 0
+  m_Name: st0
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &373371043
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 373371042}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1306165438}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &376973003 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8503454745417635347, guid: b6d57cedc6a73c94aad8ce006a26b41b, type: 3}
@@ -1236,6 +1329,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: lego test 1
       objectReference: {fileID: 0}
+    - target: {fileID: 346654792417907792, guid: a50fe9e0591af284984d082f9cd8f2b7, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3345504729156814795, guid: a50fe9e0591af284984d082f9cd8f2b7, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4280080792943919165, guid: a50fe9e0591af284984d082f9cd8f2b7, type: 3}
+      propertyPath: m_InteractionManager
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 4911270888290480278, guid: a50fe9e0591af284984d082f9cd8f2b7, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.1
@@ -1290,7 +1395,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5843336677579969749, guid: a50fe9e0591af284984d082f9cd8f2b7, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7815777990002426470, guid: a50fe9e0591af284984d082f9cd8f2b7, type: 3}
       propertyPath: m_UseGravity
@@ -1319,8 +1424,16 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 4911270888290480278, guid: a50fe9e0591af284984d082f9cd8f2b7, type: 3}
       insertIndex: -1
       addedObject: {fileID: 47707241}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 346654792417907792, guid: a50fe9e0591af284984d082f9cd8f2b7, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1401641931}
   m_SourcePrefab: {fileID: 100100000, guid: a50fe9e0591af284984d082f9cd8f2b7, type: 3}
+--- !u!1 &954090022 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 346654792417907792, guid: a50fe9e0591af284984d082f9cd8f2b7, type: 3}
+  m_PrefabInstance: {fileID: 954090021}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1069081909
 GameObject:
   m_ObjectHideFlags: 0
@@ -1403,6 +1516,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9085046f02f69544eb97fd06b6048fe2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1161506672
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1161506673}
+  m_Layer: 0
+  m_Name: st1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1161506673
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1161506672}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1306165438}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1169920385
 GameObject:
   m_ObjectHideFlags: 0
@@ -2360,6 +2504,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: lego test 2
       objectReference: {fileID: 0}
+    - target: {fileID: 346654792417907792, guid: a50fe9e0591af284984d082f9cd8f2b7, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3345504729156814795, guid: a50fe9e0591af284984d082f9cd8f2b7, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4280080792943919165, guid: a50fe9e0591af284984d082f9cd8f2b7, type: 3}
+      propertyPath: m_InteractionManager
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 4911270888290480278, guid: a50fe9e0591af284984d082f9cd8f2b7, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.1
@@ -2414,7 +2570,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5843336677579969749, guid: a50fe9e0591af284984d082f9cd8f2b7, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7815777990002426470, guid: a50fe9e0591af284984d082f9cd8f2b7, type: 3}
       propertyPath: m_UseGravity
@@ -2430,9 +2586,58 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 4911270888290480278, guid: a50fe9e0591af284984d082f9cd8f2b7, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 373371043}
+    - targetCorrespondingSourceObject: {fileID: 4911270888290480278, guid: a50fe9e0591af284984d082f9cd8f2b7, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1161506673}
+    - targetCorrespondingSourceObject: {fileID: 4911270888290480278, guid: a50fe9e0591af284984d082f9cd8f2b7, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 255757273}
+    - targetCorrespondingSourceObject: {fileID: 4911270888290480278, guid: a50fe9e0591af284984d082f9cd8f2b7, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 211547740}
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 346654792417907792, guid: a50fe9e0591af284984d082f9cd8f2b7, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1306165439}
   m_SourcePrefab: {fileID: 100100000, guid: a50fe9e0591af284984d082f9cd8f2b7, type: 3}
+--- !u!1 &1306165437 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 346654792417907792, guid: a50fe9e0591af284984d082f9cd8f2b7, type: 3}
+  m_PrefabInstance: {fileID: 1306165436}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1306165438 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4911270888290480278, guid: a50fe9e0591af284984d082f9cd8f2b7, type: 3}
+  m_PrefabInstance: {fileID: 1306165436}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1306165439
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1306165437}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d1258423e7124a2ebc575df68a879d8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LegoSnapSystem
+  studs:
+  - {fileID: 373371043}
+  - {fileID: 1161506673}
+  sockets:
+  - {fileID: 255757273}
+  - {fileID: 211547740}
+  snapDistance: 0.05
+  snapForce: 10
+  legoLayer:
+    serializedVersion: 2
+    m_Bits: 256
+  snapSound: {fileID: 0}
 --- !u!1001 &1364055689
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2943,6 +3148,30 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4911270888290480278, guid: a50fe9e0591af284984d082f9cd8f2b7, type: 3}
   m_PrefabInstance: {fileID: 954090021}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1401641931
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 954090022}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d1258423e7124a2ebc575df68a879d8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LegoSnapSystem
+  studs:
+  - {fileID: 620029498}
+  - {fileID: 467404845}
+  sockets:
+  - {fileID: 872191766}
+  - {fileID: 47707241}
+  snapDistance: 0.05
+  snapForce: 10
+  legoLayer:
+    serializedVersion: 2
+    m_Bits: 257
+  snapSound: {fileID: 0}
 --- !u!1001 &1576591419
 PrefabInstance:
   m_ObjectHideFlags: 0
