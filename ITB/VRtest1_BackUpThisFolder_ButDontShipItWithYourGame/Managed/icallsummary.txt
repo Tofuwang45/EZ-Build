@@ -285,8 +285,6 @@ UnityEngine.AndroidJNI::SetStaticStringField_Injected
 UnityEngine.AndroidJNI::SetStringField_Injected
 UnityEngine.AndroidJNIHelper::get_debug
 UnityEngine.AndroidJNIHelper::set_debug
-UnityEngine.Animation::GetStateCount_Injected
-UnityEngine.Animation::GetStateAtIndex_Injected
 UnityEngine.AnimationCurve::Internal_Equals_Injected
 UnityEngine.AnimationCurve::AddKey_Injected
 UnityEngine.AnimationCurve::AddKey_Internal_Injected
