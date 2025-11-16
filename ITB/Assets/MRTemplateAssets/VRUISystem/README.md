@@ -29,6 +29,7 @@ VRUISystem/
 - `ForearmSlateUI.cs` - Main controller that attaches UI to left forearm
 - `BlockUsageTracker.cs` - Singleton for tracking block placement statistics
 - `UndoSystem.cs` - Singleton for managing undo/redo operations
+- `VRUISystemBootstrap.cs` - **Auto-setup script for one-click VR UI installation**
 
 #### Data/
 **Purpose**: ScriptableObjects and data structures
@@ -74,16 +75,36 @@ VRUISystem/
 ### Documentation/
 **Purpose**: Setup guides and technical documentation
 
-- `VR_UI_SETUP.md` - Step-by-step Unity editor setup guide
+- `QUICK_START.md` - **⚡ One-click auto-setup guide (start here!)**
+- `DETAILED_UNITY_SETUP.md` - Detailed manual setup with exact Inspector values
+- `VR_UI_SETUP.md` - High-level setup overview
 - `IMPLEMENTATION_SUMMARY.md` - Technical overview and design decisions
+- `NEARFAR_INTERACTOR_SUPPORT.md` - NearFarInteractor vs XRRayInteractor explanation
+- `UNITY_6_COMPATIBILITY.md` - Unity 6 API compatibility guide
 
 ## 🎯 Quick Start
+
+### ⚡ Automatic Setup (Recommended)
+
+**Get the VR UI running in ~1 second:**
+
+1. Open your Unity scene with an XR rig (e.g., "MR Interaction Setup")
+2. Go to **Tools → VR UI System → Auto Setup VR UI**
+3. Press Play and look at your left forearm - the UI is there!
+
+**See**: `Documentation/QUICK_START.md` for complete auto-setup guide
+
+### 🛠️ Manual Setup (Advanced)
+
+For full control over the setup:
 
 1. **Read the documentation**: Start with `Documentation/VR_UI_SETUP.md`
 2. **Create the catalog**: Right-click → Create → VR Lego → Block Catalog Data
 3. **Setup the hierarchy**: Follow the step-by-step guide in the documentation
 4. **Create prefabs**: Build the UI prefabs as described in the setup guide
 5. **Test in VR**: Deploy to your VR headset and test the interface
+
+**See**: `Documentation/DETAILED_UNITY_SETUP.md` for manual setup guide
 
 ## 🏗️ Architecture
 
@@ -193,12 +214,17 @@ When adding new features to this system:
 ## 📞 Support
 
 For setup assistance, see:
-- `Documentation/VR_UI_SETUP.md` - Complete setup guide
-- `Documentation/IMPLEMENTATION_SUMMARY.md` - Technical details
+- `Documentation/QUICK_START.md` - **⚡ Start here for auto-setup**
+- `Documentation/DETAILED_UNITY_SETUP.md` - Manual setup with exact values
+- `Documentation/VR_UI_SETUP.md` - High-level setup overview
+- `Documentation/IMPLEMENTATION_SUMMARY.md` - Technical architecture
+- `Documentation/NEARFAR_INTERACTOR_SUPPORT.md` - Interactor compatibility
+- `Documentation/UNITY_6_COMPATIBILITY.md` - Unity 6 migration guide
 
 ---
 
-**Version**: 1.0
-**Last Updated**: 2025-11-15
-**Unity Version**: 2022.3+ (with XR Interaction Toolkit 3.2.1+)
+**Version**: 2.0 (with Auto-Bootstrap)
+**Last Updated**: 2025-11-16
+**Unity Version**: Unity 6000.2.12f1+ (with XR Interaction Toolkit 3.2.1+)
 **VR Platforms**: Meta Quest, SteamVR, OpenXR compatible
+**Interactors**: Auto-detects NearFarInteractor (Unity 6 MR Template) or XRRayInteractor (legacy)
