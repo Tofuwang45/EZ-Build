@@ -16,10 +16,6 @@ namespace MRTemplateAssets.Scripts
         public RecentsManager recentsManager;
         public GameObject statsPanelPrefab;
 
-        [Header("Debug")]
-        [Tooltip("Enable screen space rendering for testing with mouse clicks")]
-        public bool debugScreenSpaceMode = false;
-
         private Canvas canvas;
         private StatsPanel statsPanel;
         private bool isInitialized = false;
@@ -103,17 +99,7 @@ namespace MRTemplateAssets.Scripts
 
         private void SetupCanvas()
         {
-            if (debugScreenSpaceMode)
-            {
-                Debug.Log("[ForearmSlateUI] DEBUG MODE: Using ScreenSpace for testing");
-                canvas.renderMode = RenderMode.ScreenSpaceCamera;
-                canvas.worldCamera = Camera.main;
-            }
-            else
-            {
-                Debug.Log("[ForearmSlateUI] Using WorldSpace render mode");
-                canvas.renderMode = RenderMode.WorldSpace;
-            }
+            canvas.renderMode = RenderMode.WorldSpace;
         }
 
 
