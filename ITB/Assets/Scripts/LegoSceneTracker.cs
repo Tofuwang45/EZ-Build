@@ -332,6 +332,11 @@ public class LegoSceneTracker : MonoBehaviour
         }
 
         RecalculateConnections();
+
+        if (logSnapshots && SnappedBrickCount > 0)
+        {
+            Debug.Log($"LegoSceneTracker: {SnappedBrickCount} snapped bricks in {SnappedGroupCount} group(s).");
+        }
     }
 
     private void PruneInvalidEntries()
@@ -706,6 +711,9 @@ public class LegoSceneTracker : MonoBehaviour
             return;
 
         var joints = owner.GetComponents<FixedJoint>();
+        if (joints.Length > 0 && logSnapshots)
+            Debug.Log($"[LegoSceneTracker] {owner.name} has {joints.Length} FixedJoint(s)");
+        
         for (int i = 0; i < joints.Length; i++)
         {
             var joint = joints[i];
@@ -714,17 +722,28 @@ public class LegoSceneTracker : MonoBehaviour
 
             var body = joint.connectedBody;
             if (body == null)
+            {
+                if (logSnapshots)
+                    Debug.Log($"[LegoSceneTracker] Joint on {owner.name} has null connectedBody");
                 continue;
+            }
 
             var trackedComponent = FindTrackedComponent(body);
             var otherState = ResolveStateFromComponent(trackedComponent ?? (Component)body.transform);
             if (otherState == null || otherState.Transform == null)
+            {
+                if (logSnapshots)
+                    Debug.Log($"[LegoSceneTracker] Could not resolve state for {body.name}");
                 continue;
+            }
 
             Transform otherTransform = otherState.Transform;
             if (otherTransform.GetInstanceID() == selfId)
                 continue;
 
+            if (logSnapshots)
+                Debug.Log($"[LegoSceneTracker] Found connection: {owner.name} <-> {otherTransform.name}");
+            
             neighborIdScratch.Add(otherState.InstanceId);
         }
     }

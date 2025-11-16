@@ -72,13 +72,16 @@ public class LegoTrackerDebugView : MonoBehaviour
             var state = tempStates[i];
             string label = state.BrickName ?? $"Cube {state.InstanceId}";
             string entry = FormatVector(state.LastPosition);
+            string displayLine = $"{label}: {entry}";
             debugDisplay.AppendDebugEntry(label, entry);
 
-            consoleBuilder?.AppendLine($"{label}: {entry}");
+            consoleBuilder?.AppendLine(displayLine);
         }
 
         tempConnections.Clear();
         var groups = tracker.ConnectedGroups;
+        Debug.Log($"[LegoTrackerDebugView] Found {groups.Count} connected groups");
+        
         for (int g = 0; g < groups.Count; g++)
         {
             var group = groups[g];
@@ -89,12 +92,21 @@ public class LegoTrackerDebugView : MonoBehaviour
             if (connections == null)
                 continue;
 
+            Debug.Log($"[LegoTrackerDebugView] Group {g+1} has {connections.Count} connections");
+            
             for (int i = 0; i < connections.Count; i++)
             {
                 var connection = connections[i];
                 if (connection != null)
                     tempConnections.Add(connection);
             }
+        }
+
+        if (tempConnections.Count > 0)
+        {
+            string separator = $"--- {tempConnections.Count} Connection(s) ---";
+            debugDisplay.AppendDebugEntry("", separator);
+            consoleBuilder?.AppendLine($"\n{separator}");
         }
 
         for (int i = 0; i < tempConnections.Count; i++)
