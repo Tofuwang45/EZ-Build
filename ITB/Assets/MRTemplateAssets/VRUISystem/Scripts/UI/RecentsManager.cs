@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.XR.Interaction.Toolkit;
+
 
 namespace MRTemplateAssets.Scripts
 {
@@ -20,7 +20,7 @@ namespace MRTemplateAssets.Scripts
         public int maxRecents = 6;
 
         [Header("Interaction")]
-        public XRRayInteractor rayInteractor;
+        public UnityEngine.XR.Interaction.Toolkit.Interactors.XRRayInteractor rayInteractor;
 
         private BlockCatalogData catalogData;
         private List<BlockButton> recentButtons = new List<BlockButton>();

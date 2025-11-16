@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.XR.Templates.MR;
 
 namespace MRTemplateAssets.Scripts
 {
@@ -103,8 +104,9 @@ namespace MRTemplateAssets.Scripts
             }
 
             // Get spawned objects information
-            var spawnedObjects = FindObjectsOfType<SpawnedObjectHelper>();
-            context += $"\nNumber of objects in scene: {spawnedObjects.Length}\n";
+            var spawnedObjectsManager = FindObjectOfType<SpawnedObjectsManager>();
+            int objectCount = spawnedObjectsManager != null ? spawnedObjectsManager.gameObject.transform.childCount : 0;
+            context += $"\nNumber of objects in scene: {objectCount}\n";
 
             return context;
         }
