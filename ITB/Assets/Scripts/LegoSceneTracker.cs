@@ -140,6 +140,7 @@ public class LegoSceneTracker : MonoBehaviour
         {
             RegisterSnapBrick(snap);
         }
+
     }
 
     /// <summary>
@@ -408,7 +409,13 @@ public class LegoSceneTracker : MonoBehaviour
                 CollectConnectedNeighborIds(brickState);
                 foreach (var neighborComponentId in neighborIdScratch)
                 {
-                    if (!trackedBricks.TryGetValue(neighborComponentId, out var neighborState) || neighborState == null || neighborState.Transform == null)
+                    TrackedBrickState neighborState;
+                    if (!trackedBricks.TryGetValue(neighborComponentId, out neighborState))
+                    {
+                        trackedByTransform.TryGetValue(neighborComponentId, out neighborState);
+                    }
+
+                    if (neighborState == null || neighborState.Transform == null)
                         continue;
 
                     int neighborTransformId = neighborState.InstanceId;
@@ -535,14 +542,10 @@ public class LegoSceneTracker : MonoBehaviour
 
     private void AppendJointConnectionsDetailed(TrackedBrickState state)
     {
-        if (state == null)
+        if (state == null || state.Transform == null)
             return;
 
-        var snapBrick = state.SnapPerfect;
-        if (snapBrick == null)
-            return;
-
-        var joints = snapBrick.GetComponents<FixedJoint>();
+        var joints = state.Transform.GetComponents<FixedJoint>();
         for (int i = 0; i < joints.Length; i++)
         {
             var joint = joints[i];
@@ -553,15 +556,8 @@ public class LegoSceneTracker : MonoBehaviour
             if (body == null)
                 continue;
 
-            Component candidate = body.GetComponent<LegoBrick>();
-            if (candidate == null)
-                candidate = body.GetComponent<LegoSnapPerfect>();
-            if (candidate == null)
-                candidate = body.GetComponentInParent<LegoBrick>();
-            if (candidate == null)
-                candidate = body.GetComponentInParent<LegoSnapPerfect>();
-
-            var otherState = ResolveStateFromComponent(candidate);
+            var trackedComponent = FindTrackedComponent(body);
+            var otherState = ResolveStateFromComponent(trackedComponent ?? (Component)body.transform);
             if (otherState == null)
                 continue;
 
@@ -615,6 +611,22 @@ public class LegoSceneTracker : MonoBehaviour
         return (idB, idA);
     }
 
+    private static Component FindTrackedComponent(Rigidbody body)
+    {
+        if (body == null)
+            return null;
+
+        Component candidate = body.GetComponent<LegoBrick>();
+        if (candidate == null)
+            candidate = body.GetComponent<LegoSnapPerfect>();
+        if (candidate == null)
+            candidate = body.GetComponentInParent<LegoBrick>();
+        if (candidate == null)
+            candidate = body.GetComponentInParent<LegoSnapPerfect>();
+
+        return candidate;
+    }
+
     private TrackedBrickState ResolveStateFromComponent(Component component)
     {
         if (component == null)
@@ -642,9 +654,9 @@ public class LegoSceneTracker : MonoBehaviour
             AppendSnapPointConnections(state.LegoBrick, state.InstanceId);
         }
 
-        if (state.SnapPerfect != null)
+        if (state.Transform != null)
         {
-            AppendJointConnections(state.SnapPerfect, state.InstanceId);
+            AppendJointConnections(state.Transform, state.InstanceId);
         }
     }
 
@@ -675,22 +687,25 @@ public class LegoSceneTracker : MonoBehaviour
                 if (otherBrick == null)
                     continue;
 
-                int otherId = otherBrick.GetInstanceID();
-                var otherTransform = otherBrick.transform;
-                if (otherTransform != null && otherTransform.GetInstanceID() == selfId)
+                var otherState = ResolveStateFromComponent(otherBrick);
+                if (otherState == null || otherState.Transform == null)
                     continue;
 
-                neighborIdScratch.Add(otherId);
+                var otherTransform = otherState.Transform;
+                if (otherTransform.GetInstanceID() == selfId)
+                    continue;
+
+                neighborIdScratch.Add(otherState.InstanceId);
             }
         }
     }
 
-    private void AppendJointConnections(LegoSnapPerfect snapBrick, int selfId)
+    private void AppendJointConnections(Transform owner, int selfId)
     {
-        if (snapBrick == null)
+        if (owner == null)
             return;
 
-        var joints = snapBrick.GetComponents<FixedJoint>();
+        var joints = owner.GetComponents<FixedJoint>();
         for (int i = 0; i < joints.Length; i++)
         {
             var joint = joints[i];
@@ -701,23 +716,16 @@ public class LegoSceneTracker : MonoBehaviour
             if (body == null)
                 continue;
 
-            Component candidate = body.GetComponent<LegoBrick>();
-            if (candidate == null)
-                candidate = body.GetComponent<LegoSnapPerfect>();
-            if (candidate == null)
-                candidate = body.GetComponentInParent<LegoBrick>();
-            if (candidate == null)
-                candidate = body.GetComponentInParent<LegoSnapPerfect>();
-
-            if (candidate == null)
+            var trackedComponent = FindTrackedComponent(body);
+            var otherState = ResolveStateFromComponent(trackedComponent ?? (Component)body.transform);
+            if (otherState == null || otherState.Transform == null)
                 continue;
 
-            int otherId = candidate.GetInstanceID();
-            Transform otherTransform = candidate.transform;
-            if (otherTransform != null && otherTransform.GetInstanceID() == selfId)
+            Transform otherTransform = otherState.Transform;
+            if (otherTransform.GetInstanceID() == selfId)
                 continue;
 
-            neighborIdScratch.Add(otherId);
+            neighborIdScratch.Add(otherState.InstanceId);
         }
     }
 
